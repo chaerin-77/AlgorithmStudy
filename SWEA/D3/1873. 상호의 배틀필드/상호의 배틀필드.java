@@ -3,7 +3,29 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
+/*
+등장하는 전차는 사용자의 전차 하나 (적, 아군 X)
+맵 밖일 경우 이동 X
+포탄 발사 -> 포탄은 벽돌, 강철 벽에 충돌 | 맵 밖까지 직진
+                벽에 부딪히면 포탄 소멸
+	     벽돌: 파괴, 강철: X
+입력
+T
+H(높이), W(너비) -> H * W 격자판
+H줄에 W길이의 문자열
+N(사용자 입력)
+길이가 N인 문자열
 
+출력
+#t 모든 입출력 후의 게임 맵
+
+*문제 해결 프로세스*
+1.  U, D, L, R 함수는 하나에 넣어서 (int x, int y)
+	if *, #이 아니라면 해당 방향으로 직진
+2. S일 경우
+	while (*, #을 만나기 전까지) 해당 방향으로 직진후 멈춤
+		if * -> 해당 위치 . 으로 변경
+ */
 public class Solution {
 	static int H, W, N;
 	static char[][] map;
@@ -52,8 +74,8 @@ public class Solution {
 			User = br.readLine();
 			
 			for (int i = 0; i < N; i++) {
-				if (User.charAt(i) == 'S') shooting(c.X, c.Y);
-				else move(c.X, c.Y, User.charAt(i));
+				if (User.charAt(i) == 'S') shooting();
+				else move(User.charAt(i));
 			}
 			map[c.X][c.Y] = c.Show(c.dir);
 			
@@ -67,7 +89,7 @@ public class Solution {
 		}
 	}
 	
-	private static void move (int x, int y, char d) {
+	private static void move (char d) {
 		if (d == 'U') c.dir = 0;
 		else if (d == 'D') c.dir = 1;
 		else if (d == 'L') c.dir = 2;
@@ -83,8 +105,8 @@ public class Solution {
 		c.Y = ny;
 	}
 	
-	private static void shooting (int x, int y) {
-		int nx = x, ny = y;
+	private static void shooting () {
+		int nx = c.X, ny = c.Y;
 		while (true) {
 			nx += dr[c.dir];
 			ny += dc[c.dir];
@@ -95,3 +117,4 @@ public class Solution {
 		if (map[nx][ny] == '*') map[nx][ny] = '.';
 	}
 }
+// 시간: 185ms, 메모리: 33,408KB
