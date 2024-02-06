@@ -47,6 +47,7 @@ public class Solution {
 			}
 			temp += Math.abs(office.X - map[picked[N-1]].X) + Math.abs(office.Y - map[picked[N-1]].Y);
 			answer = Math.min(answer, temp);
+			return;
 		}
 		
 		for (int i = 0; i < N; i++) {
