@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+// 시간: 80ms, 메모리: 11,616KB
 public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -29,6 +30,11 @@ public class Main {
 				for (int d = 0; d < 4; d++) {
 					int nr = i + dr[d];
 					int nc = j + dc[d];
+					
+					int pr = i - dr[d];
+					int pc = j - dc[d];
+					
+					if (pr >= 0 && pc >= 0 && pr < 19 && pc < 19 && map[pr][pc] == col) continue;
 					int count = 1;
 					
 					while (true) {
@@ -43,9 +49,6 @@ public class Main {
 					
 					// 6목 체크
 					if (count == 5) {
-						int pr = i - dr[d];
-						int pc = j - dc[d];
-						if (pr >= 0 && pc >= 0 && pr < 19 && pc < 19 && map[pr][pc] == col) continue;
 						winner = col;
 						R = i + 1;
 						C = j + 1;
