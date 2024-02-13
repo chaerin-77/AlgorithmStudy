@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Solution {
+	static StringBuilder sb = new StringBuilder();
 	static int N, answer;
 	static int[][] Synergy;
 	static boolean[] isSelected;
@@ -27,33 +28,26 @@ public class Solution {
 				}
 			}
 			comb(0, 0);
-			System.out.println(String.format("#%d %d", t, answer));
+			sb.append("#" + t + " " +answer + "\n");
 		}
+		System.out.println(sb);
 	}
 	
 	public static void comb (int cnt, int start) {
 		if (cnt == N / 2) {
-			List<Integer> Afood = new ArrayList<Integer>();
-			List<Integer> Bfood = new ArrayList<Integer>();
-			for (int i = 0; i < N; i++) {
-				// 선택된 것은 Afood, 선택되지 않은 것은 Bfood에 저장
-				if (isSelected[i]) Afood.add(i);
-				else Bfood.add(i);
-			}
-			
 			int A = 0, B = 0;
-			for (int i = 0; i < N/2; i++) {
-				for (int j = i; j < N/2; j++) {
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
 					// 이중 반복문으로 모든 시너지 계산
-					A += Synergy[Afood.get(i)][Afood.get(j)] + Synergy[Afood.get(j)][Afood.get(i)];
-					B += Synergy[Bfood.get(i)][Bfood.get(j)] + Synergy[Bfood.get(j)][Bfood.get(i)];
+					if (isSelected[i] && isSelected[j]) A += Synergy[i][j];
+					else if (!isSelected[i] && !isSelected[j]) B += Synergy[i][j];
 				}
 			}
 			answer = Math.min(answer, Math.abs(A - B));
 			return;
 		}
 		for (int i = start; i < N; i++) {
-			// boolean 배열로 해당 요소를 조합에 넣엇는 지 표시
+			// boolean 배열로 해당 요소를 조합에 넣었는 지 표시
 			isSelected[i] = true;
 			comb(cnt + 1, i + 1);
 			isSelected[i] = false;
