@@ -34,12 +34,15 @@ public class Main {
 			visited = new boolean[N][M];
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < M; j++) {
+					// 0이 아니고 방문하지 않았을 경우 bfs
 					if(map[i][j] != 0 && !visited[i][j]) {
 						iceBerg(i, j);
+						// bfs로 나왔다면 집합이 있는 것이기 때문에 하나 증가
 						sep++;
 					}
 				}
 			}
+			//그대로 0이라면 없는 것이기 때문에 0으로 세팅
 			if (sep == 0) {
 				year = 0;
 				break;
@@ -52,7 +55,9 @@ public class Main {
 	
 	public static void iceBerg(int r, int c) {
 		Deque<int[]> melting = new ArrayDeque<int[]>();
+		// 첫 좌표 삽입 후 방문 표시
 		melting.offer(new int[] {r, c});
+		visited[r][c] = true;
 		
 		while(!melting.isEmpty()) {
 			int[] temp = melting.poll();
@@ -60,19 +65,20 @@ public class Main {
 			int cc = temp[1];
 			int count = 0;
 			
-			if (visited[cr][cc]) continue;
-			visited[cr][cc] = true;
-			
 			for (int d = 0; d < 4; d++) {
 				int nr = cr + dr[d];
 				int nc = cc + dc[d];
 				
-				// 다음 좌표 범위 체크
 				if (visited[nr][nc]) continue;
-
+				// 0이라면 count 증가
 				if (map[nr][nc] == 0) count++;
-				else if (!visited[nr][nc]) melting.offer(new int[] {nr, nc});
+				// 0이 아니고 방문하지 않았다면 방문 표시 후 큐에 추가
+				else if (!visited[nr][nc]) {
+					melting.offer(new int[] {nr, nc});
+					visited[nr][nc] = true;
+				}
 			}
+			// 0까지만 빼주기 위함
 			tempmap[cr][cc] = Math.max(0, tempmap[cr][cc] - count);
 		}
 		map = tempmap;
