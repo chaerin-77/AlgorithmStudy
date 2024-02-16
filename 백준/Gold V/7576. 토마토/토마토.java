@@ -27,17 +27,25 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < M; j++) {
 				tomato[i][j] = Integer.parseInt(st.nextToken());
+				// 전부 익은 토마토인지 확인
 				if (tomato[i][j] == 0 && !flag) flag = true;
+				
+				// 익은 토마토 큐에 추가
 				if (tomato[i][j] == 1) {
 					q.offer(new int[] {i, j, 0});
 				}
 			}
 		}
+		
+		// 전부 익은 토마토였다면 0 출력 후 종료
 		if (!flag) {
 			System.out.println(0);
 			return;
 		}
+		
 		bfs();
+		
+		// 전부 익었는지 확인
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
 				if (tomato[i][j] == 0) {
@@ -55,6 +63,8 @@ public class Main {
 			int r = temp[0];
 			int c = temp[1];
 			int date = temp[2];
+			
+			// 탐색 중 소요된 시간 계산
 			day = Math.max(day, date);
 			
 			for (int d = 0; d < 4; d++) {
