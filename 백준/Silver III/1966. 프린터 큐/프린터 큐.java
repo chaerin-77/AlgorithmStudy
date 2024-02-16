@@ -25,22 +25,27 @@ public class Main {
 				int temp = Integer.parseInt(st.nextToken());
 				print.offer(temp);
 			}
-			priority.addAll(print);
+			priority.addAll(print); // pq에도 값들 저장
 			
 			while(!print.isEmpty()) {
-				if (M == 0 && print.peek() == priority.peek()) {
-					System.out.println(answer);
-					break;
-				}
-				
+				// 만약 맨 앞 순서가 중요도가 낮다면
 				if (print.peek() < priority.peek()) {
-					if(M == 0) M = print.size();
+					// 근데 그게 내가 궁금했던 순서였다면 맨 뒤로 인덱스 변경
+					if (M == 0) M = print.size();
+					
+					// 맨 앞 순서를 맨 뒤로 보냄
 					print.offer(print.poll());
-				} else {
+				} else { // 중요도가 높다면
+					if (M == 0) { // 내가 궁금한 순서였을 경우 답 출력 후 종료
+						System.out.println(answer);
+						break;
+					}
+					// 인쇄 후 인쇄 순서 증가
 					print.remove();
 					priority.remove();
 					answer++;
 				}
+				// 나의 순서 감소
 				M--;
 			}
 		}
