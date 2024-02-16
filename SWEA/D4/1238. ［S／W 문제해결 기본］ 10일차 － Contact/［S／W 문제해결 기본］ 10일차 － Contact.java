@@ -45,6 +45,7 @@ public class Solution {
 			int from = temp[0];
 			int isLast = temp[1];
 			
+			// 가장 나중에 받는 번호라면 번호 최댓값 변경
 			if (isLast >= last) {
 				num = Math.max(num, from);
 			}
@@ -53,6 +54,7 @@ public class Solution {
 				if(!visited[to]) {
 					visited[to] = true;
 					q.offer(new int[] {to, isLast + 1});
+					// 연락을 가장 나중에 받는 인덱스 지정
 					last = isLast + 1;
 					num = 0;
 				}
