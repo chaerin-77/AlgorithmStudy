@@ -7,10 +7,17 @@ import java.util.Deque;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/*
+ * 문제 해결 프로세스
+ * 1. 선행 조건이 있다 -> 위상 정렬
+ * 2. 나보다 선행되어야 하는 조건의 수 세기 (진입 차수)
+ * 3. 선행 조건이 없는 요소들 부터 큐에 추가한 후 해당 요소를 선행으로 가지는 요소의 진입차수 감소
+ */
+
 public class Main {
 	static StringBuilder sb = new StringBuilder();
 	static int N, M;
-	static int[] degrees;
+	static int[] degrees; // 나보다 앞에 서야하는 학생의 수
 	static List<Integer>[] student;
 	static Deque<Integer> order = new ArrayDeque<Integer>();
 	
@@ -30,8 +37,8 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			int A = Integer.parseInt(st.nextToken());
 			int B = Integer.parseInt(st.nextToken());
-			student[A].add(B);
-			degrees[B]++;
+			student[A].add(B); // A의 뒤에 서야하는 B 추가
+			degrees[B]++; // B보다 앞에 서야하는 학생 수 증가
 		}
 		
 		ordering();
@@ -40,16 +47,17 @@ public class Main {
 	
 	private static void ordering() {
 		for (int i = 1; i <= N; i++) {
+			// 진입 차수가 0인 학생들 큐에 추가
 			if (degrees[i] == 0) order.offer(i);
 		}
 		
 		while(!order.isEmpty()) {
 			int pre = order.poll();
-			sb.append(pre + " ");
+			sb.append(pre + " "); // 큐에서 제거하고 출력
 			
 			for (int last : student[pre]) {
-				degrees[last]--;
-				if(degrees[last] == 0) order.offer(last);
+				degrees[last]--; // 해당 학생의 진입 차수 감소
+				if(degrees[last] == 0) order.offer(last); // 진입 차수가 0이 되면 큐에 추가
 			}
 		}
 	}
