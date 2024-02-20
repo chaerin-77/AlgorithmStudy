@@ -32,13 +32,18 @@ public class Main {
 				st = new StringTokenizer(br.readLine());
 				int from = Integer.parseInt(st.nextToken());
 				int to = Integer.parseInt(st.nextToken());
+				// 양방향 간선 처리
 				trees[from].add(to);
 				trees[to].add(from);
 			}
 			
 			count = 0;
 			for (int i = 1; i <= N; i++) {
-				if(visited[i]) continue;
+				if(visited[i]) continue; // 방문 했던 정점일 경우 다음 탐색
+				/*
+				 * 트리는 정점 N개, 간선 수 N-1 개 라고 했기 때문에
+				 * 정점과 간선의 갯수를 초기화하면서 dfs 탐색
+				 */
 				edge = 0;
 				vertex = 1;
 				visited[i] = true;
@@ -55,10 +60,11 @@ public class Main {
 	
 	private static void dfs(int v) {
 		for (int to : trees[v]) {
-			edge++;
+			edge++; // 간선의 개수는 먼저 count
 			if (visited[to]) continue;
-			visited[to] = true;
+			// 방문하지 않았던 정점일 경우에만 정점의 개수 증가
 			vertex++;
+			visited[to] = true;
 			dfs(to);
 		}
 	}
