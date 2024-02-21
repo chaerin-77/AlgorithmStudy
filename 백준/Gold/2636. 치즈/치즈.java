@@ -32,17 +32,18 @@ public class Main {
 			for (int j = 0; j < C; j++) {
 				int temp = Integer.parseInt(st.nextToken());
 				map[i][j] = temp;
-				if (temp == 1) cheese++;
+				if (temp == 1) cheese++; // 처음 치즈의 개수 저장
 			}
 		}
 		
-		precheese = cheese;
+		precheese = cheese; // 이전 치즈의 개수를 셀 변수
 		while(true) {
-			if (cheese == 0) break;
-			
+			if (cheese == 0) break; // 치즈가 다 녹았다면 break
 			visited = new boolean[R][C];
+			
 			time++;
-			precheese = cheese;
+			
+			precheese = cheese; // 탐색 전 치즈의 개수 저장
 			bfs();
 		}
 		System.out.println(time);
@@ -64,14 +65,14 @@ public class Main {
 				
 				if (nr < 0 || nc < 0 || nr >= R || nc >= C || visited[nr][nc]) continue;
 				
-				visited[nr][nc] = true;
-				
-				if (map[nr][nc] == 0) {
-					air.offer(new int[] {nr, nc});
-				} else {
-					map[nr][nc] = 0;
+				// 공기일 경우 큐에 저장
+				if (map[nr][nc] == 0) air.offer(new int[] {nr, nc});
+				else {
+					map[nr][nc] = 0; // 치즈일 경우 녹이고 치즈 개수 감소
 					cheese--;
 				}
+				
+				visited[nr][nc] = true; // 방문 처리
 			}
 		}
 	}
