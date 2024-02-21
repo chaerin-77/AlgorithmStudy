@@ -5,6 +5,14 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.StringTokenizer;
 
+/*
+ * 문제 해결 프로세스
+ * 1. 초기 세팅은 이미 (0,0)에 되어있기 때문에 1초부터 시작
+ * 2. 해당 초까지 이동을 해야하므로 현재 시간 <= 방향 전환 시간 까지 이동 -> 이동 후 방향 전환
+ * 	- 방향 전환은 왼쪽 = -1, 오른쪽 = 1로 하여 "(현재 방향 + 4 + 전환할 방향) % 4" 로 계산
+ * 3. 마지막은 벽이나 자기 자신에 부딪힐 때까지 무한 반복 해야하므로 적절히 처리 -> 최댓값으로 저장
+ */
+
 public class Main {
 	static int N, K, L, endTime = 1;
 	static int[][] board, move;
