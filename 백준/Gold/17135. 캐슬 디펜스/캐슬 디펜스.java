@@ -3,7 +3,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
-
+/*
+ * 문제 해결 프로세스
+ * 1. 적들을 내리는 것이 아닌 성의 위치를 올려서 계산
+ * 2. 궁수의 위치는 조합으로 선정 -> 이후 모두 탐색
+ * 3. 가장 가까운 적이 우선이나 거리가 같을 경우 왼쪽의 적 처리 (적 중복 선택 가능)
+ *  - 적 발견 시 각 궁수 별 적과의 거리를 계산하여 갱신
+ *  - 이 때, 거리가 같을 경우 더 왼쪽의 적인지 확인하여 갱신
+ * 4. 이후 적의 좌표를 0으로 바꾸어주고 성을 위로 올린다
+ * 5. 하나의 조합 확인 후 모든 정보를 처음의 상태로 원위치 시켜야 함
+*/
 public class Main {
     static class Location {
         int r, c, dist = 11;
@@ -22,18 +31,11 @@ public class Main {
             this.c = c;
             this.dist = dist;
         }
-
-        @Override
-        public String toString() {
-            return "Location [r=" + r + ", c=" + c + ", dist=" + dist + "]";
-        }
     }
     static int N, M, D, answer = 0, enemyCnt = 0, count = 0;
     static int[][] map, setMap;
     static Location[] Archer;
     static Location[] picked;
-
-    static int check = 1;
     
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -50,7 +52,6 @@ public class Main {
             for (int j = 0; j < M; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
                 setMap[i][j] = map[i][j];
-                if (map[i][j] == 1) enemyCnt++;
             }
         }
         combi(0, 0);
@@ -59,10 +60,11 @@ public class Main {
     
     private static void combi(int cnt, int start) {
         if (cnt == 3) {
-//            System.out.println("Archer: " + Arrays.toString(Archer));
             war();
-            answer = Math.max(answer, count);
-            Archer[0].r = Archer[1].r = Archer[2].r = N;
+            answer = Math.max(answer, count); // 정답 max 값으로 갱신
+            Archer[0].r = Archer[1].r = Archer[2].r = N; // 궁수 위치 초기화
+            
+            // 사용한 맵 초기화
             for (int i = 0; i < N; i++) {
                 System.arraycopy(map[i], 0, setMap[i], 0, M);
             }
@@ -70,6 +72,7 @@ public class Main {
         }
         
         for (int i = start; i < M; i++) {
+            // 궁수의 위치 조합으로 뽑기
             Archer[cnt] = new Location(N, i);
             combi(cnt + 1, i + 1);
         }
@@ -79,23 +82,26 @@ public class Main {
         int castle = N;
         count = 0;
         while (castle > 0) {
+            // 뽑은 적의 좌표 초기화
             picked[0] = new Location(-1, -1);
             picked[1] = new Location(-1, -1);
             picked[2] = new Location(-1, -1);
-
+            
+            // 성 위치에서 사정거리 닿는 곳부터 성 앞까지만 반복문 (0보다 작아진다면 0부터 확인)
             for (int i = (castle - D < 0 ? 0 : castle - D); i < castle; i++) {
                 for (int j = 0; j < M; j++) {
                     if (setMap[i][j] == 0) continue;
+                    
+                    // 적이 있다면 확인
                     pickEnemy(i, j);
                 }
             }
 
-//            System.out.println("picked: " + Arrays.toString(picked));
             for (int i = 0; i < 3; i++) {
+                // 적이 뽑혔고, 해치운 적이 아니라면 0으로 변경 후 적 count 증가
                 if (picked[i].r != -1 && setMap[picked[i].r][picked[i].c] != 0) {
                     setMap[picked[i].r][picked[i].c] = 0;
                     count++;
-//                    System.out.println("count: " + count);
                 }
             }
 
@@ -103,18 +109,14 @@ public class Main {
             castle--;
             Archer[0].r = Archer[1].r = Archer[2].r = castle;
         }
-
-//        System.out.println(count);
     }
     
     private static void pickEnemy(int er, int ec) {
         for (int a = 0; a < 3; a++) {
             int r = Archer[a].r;
             int c = Archer[a].c;
-//            System.out.println("궁수: " + r + " " + c);
-//            System.out.println("적: " + er + " " + ec);
             int dist = Math.abs(r - er) + Math.abs(c - ec);
-//            System.out.println("dist: " + dist);
+            
             // 사정 거리를 벗어날 경우 종료
             if (dist > D) continue;
 
@@ -123,22 +125,12 @@ public class Main {
                 picked[a].r = er;
                 picked[a].c = ec;
                 picked[a].dist = dist;
-//                System.out.println("채택!!");
-            } else if (dist == picked[a].dist && ec < picked[a].c) {
+            } 
+            // 거리는 같지만 더 왼쪽에 있는 적이라면 조준 변경
+            else if (dist == picked[a].dist && ec < picked[a].c) {
                 picked[a].r = er;
                 picked[a].c = ec;
-//                System.out.println("채택!!");
             }
         }
-    }
-    
-    public static void Print() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                System.out.printf("%d ", setMap[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println();
     }
 }
