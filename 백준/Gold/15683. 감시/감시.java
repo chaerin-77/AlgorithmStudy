@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
  * 3. depth가 CCTV의 개수와 같아지면 사각지대의 개수를 세어 최소값으로 갱신
  */
 
+// 시간: 280ms, 메모리: 31,300KB
 public class Main {
 	static class CCTV {
 		int num, r, c;
@@ -24,11 +25,12 @@ public class Main {
 			this.c = c;
 		}
 	}
-	static int N, M, blindSpot;
+	static int N, M, blindSpot, result;
 	static List<CCTV> observe = new ArrayList<>();
 	static int[][] map;
 	static int[] dr = {0, -1, 0, 1};
 	static int[] dc = {-1, 0, 1, 0};
+	static int[] rotate = {0, 4, 2, 4, 4, 1};
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -36,7 +38,8 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		map = new int[N][M];
-		blindSpot = N*M;
+		blindSpot = 0;
+		result = N*M;
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < M; j++) {
@@ -44,34 +47,29 @@ public class Main {
 				if (map[i][j] != 0 && map[i][j] != 6) {
 					observe.add(new CCTV(map[i][j], i, j));
 				}
+				if (map[i][j] == 0) blindSpot++;
 			}
 		}
 		observe(0);
-		System.out.println(blindSpot);
+		System.out.println(result);
 	}
 
 	private static void observe(int cnt) {
 		if (cnt == observe.size()) {
-			// 사각지대 count;
-			int count = 0;
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < M; j++) {
-					if (map[i][j] != 0) continue;
-					count++;
-				}
-			}
-			blindSpot = Math.min(blindSpot, count);
+			result = Math.min(blindSpot, result);
 			return;
 		}
 		
 		// 이번 탐색에서 사용할 배열 생성
 		int[][] map_set = new int[N][M];
+		int backup = blindSpot;
 		for (int i = 0; i < N; i++) {
 			System.arraycopy(map[i], 0, map_set[i], 0, M);
 		}
 		
 		CCTV cur = observe.get(cnt);
-		for (int d = 0; d < 4; d++) {
+		for (int d = 0; d < rotate[cur.num]; d++) {
+			
 			switch(cur.num) {
 			case 1:
 				check(cur.r, cur.c, d % 4);
@@ -102,6 +100,7 @@ public class Main {
 			for (int i = 0; i < N; i++) {
 				System.arraycopy(map_set[i], 0, map[i], 0, M);
 			}
+			blindSpot = backup;
 		}
 		
 	}
@@ -117,6 +116,7 @@ public class Main {
 			// 다른 CCTV를 만났거나 이미 감시되는 구역일 경우 다음 좌표 탐색
 			if (map[nr][nc] != 0) continue;
 			map[nr][nc] = 8;
+			blindSpot--;
 		}
 	}
 }
