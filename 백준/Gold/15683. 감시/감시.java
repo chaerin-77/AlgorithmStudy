@@ -5,6 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/*
+ * 문제 해결 프로세스
+ * 1. CCTV의 좌표 입력 받기
+ * 2. CCTV를 기준으로 dfs를 돈다
+ * - 이 때 매 depth마다 배열을 생성하여 현재 까지의 시도를 저장해놓고 방향 회전 후 저장해놓은 배열로 다시 원위치 시킨다.
+ * 3. depth가 CCTV의 개수와 같아지면 사각지대의 개수를 세어 최소값으로 갱신
+ */
+
 public class Main {
 	static class CCTV {
 		int num, r, c;
