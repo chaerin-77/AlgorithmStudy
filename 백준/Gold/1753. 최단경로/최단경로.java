@@ -62,8 +62,9 @@ public class Main {
 		
 		for (int i = 1; i <= V; i++) {
 			int temp = dist[i];
-			if (temp == INF) System.out.println("INF");
-			else System.out.println(temp);
+			if (temp == INF) sb.append("INF").append("\n");
+			else sb.append(temp).append("\n");
 		}
+		System.out.println(sb);
 	}
 }
