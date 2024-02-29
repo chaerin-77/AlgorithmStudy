@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
  * - 이때 4방향이 모두 되지 않아 코어가 선택이 안될 경우 dfs가 돌지 않기 때문에 해당 경우를 위한 탐색도 해줘야함!!!
  */
 
+// 시간: 867ms, 메모리: 108,884KB
 public class Solution {
 	static class Cell {
 		int r, c;
@@ -23,7 +24,7 @@ public class Solution {
 			this.c = c;
 		}
 	}
-	static int N, maxCell, minWire, curCell, curWire;
+	static int N, maxCell, minWire;
 	static int[][] maxinos;
 	static List<Cell> cells;
 	static int[] dr = {0, -1, 0, 1};
@@ -38,7 +39,7 @@ public class Solution {
 			N = Integer.parseInt(br.readLine());
 			cells = new ArrayList<>();
 			maxinos = new int[N][N];
-			maxCell = curCell = curWire = 0;
+			maxCell = 0;
 			minWire = Integer.MAX_VALUE;
 			
 			for (int i = 0; i < N; i++) {
@@ -51,32 +52,25 @@ public class Solution {
 					cells.add(new Cell(i, j)); // 연결되지 않은 코어들은 리스트에 추가
 				}
 			}
-			connect(0);
+			connect(0, 0, 0);
 			sb.append("#").append(t).append(" ").append(minWire).append("\n");
 		}
 		System.out.println(sb);
 	}
 
-	private static void connect(int cnt) {
+	private static void connect(int cnt, int curCell, int Wire) {
 		if (cnt == cells.size()) {
 			// 연결된 코어의 값이 늘어났다면 값 변경
 			if (curCell > maxCell) {
-				minWire = curWire;
+				minWire = Wire;
 				maxCell = curCell;
 			}
 			// 동일하다면 더 적은 전선의 값으로 변경
-			else if (curCell == maxCell) minWire = Math.min(minWire, curWire);
+			else if (curCell == maxCell) minWire = Math.min(minWire, Wire);
 			return;
 		}
 		
-		// 이번 시도 후 이전 시도의 상태로 돌려놓기 위한 백업 자료들
-		int[][] bMaxinos = new int[N][N];
-		int bCell = curCell, bWire = curWire;
-		for (int i = 0; i < N; i++) {
-			System.arraycopy(maxinos[i], 0, bMaxinos[i], 0, N);
-		}
-		
-		connect(cnt + 1); // 코어를 선택하지 않았을 경우의 dfs 탐색
+		connect(cnt + 1, curCell, Wire); // 코어를 선택하지 않았을 경우의 dfs 탐색
 		
 		Cell cur = cells.get(cnt);
 		for (int d = 0; d < 4; d++) {
@@ -84,49 +78,41 @@ public class Solution {
 			int c = cur.c;
 			
 			// 연결 전 해당 방향 연결 가능 여부 먼저 체크
-			if (!checkWire(r, c, d)) continue;
+			int length = checkWire(r, c, d);
+			if (length == 0) continue;
 			
-			setWire(r, c, d);
-			connect(cnt + 1);
+			setWire(r, c, d, length, 1);
+			connect(cnt + 1, curCell + 1, Wire + length);
 			
 			// 사용한 값 초기화
-			for (int i = 0; i < N; i++) {
-				System.arraycopy(bMaxinos[i], 0, maxinos[i], 0, N);
-			}
-			curCell = bCell;
-			curWire = bWire;
+			setWire(r, c, d, length, 0);
 		}
 	}
 	
-	private static boolean checkWire(int r, int c, int d) {
-		int nr = r, nc = c;
+	private static int checkWire(int r, int c, int d) {
+		int nr = r, nc = c, length = 0;
 		
 		while(true) {
 			nr += dr[d];
 			nc += dc[d];
 			
 			// 연결 가능하다면 true 반환
-			if (nr < 0 || nc < 0 || nr >= N || nc >= N) return true;
+			if (nr < 0 || nc < 0 || nr >= N || nc >= N) return length;
 			// 연결 불가능하다면 false 반환
-			if (maxinos[nr][nc] == 1) return false;
+			if (maxinos[nr][nc] == 1) return 0;
+			
+			length++;
 		}
 	}
 
-	private static void setWire(int r, int c, int d) {
+	private static void setWire(int r, int c, int d, int length, int num) {
 		int nr = r, nc = c;
 		
-		while(true) {
+		for (int i = 0; i < length; i++) {
 			nr += dr[d];
 			nc += dc[d];
 			
-			// 이 함수 실행 전에 연결 가능 여부를 미리 체크했기 때문에 연결 불가능한 경우는 확인 X
-			if (nr < 0 || nc < 0 || nr >= N || nc >= N) {
-				curCell++;
-				return;
-			}
-			
-			maxinos[nr][nc] = 1;
-			curWire++;
+			maxinos[nr][nc] = num;
 		}
 	}
 }
