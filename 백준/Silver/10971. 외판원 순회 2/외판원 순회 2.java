@@ -3,6 +3,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+/*
+ * 문제 해결 프로세스
+ * 1. 원래의 도시로 돌아오는 순회를 해야함 -> 무조건 사이클 -> 다익스트라 불가
+ * 2. 도시를 순서대로 방문하는 것이기 때문에 순열
+ * 3. 순열을 만든 후 해당 도시와의 길이 없으면 return; 아니면 합산 후 최소값으로 갱신
+ */
+
 public class Main {
 	static int[] picked;
 	static int[][] W;
