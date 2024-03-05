@@ -5,6 +5,15 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.StringTokenizer;
 
+/*
+ * 문제 해결 프로세스
+ * 1. 터널 별 dr, dc 작성
+ * - LTRB 기준으로 4방향을 모두 작성
+ * - 이후 dr과 dc가 모두 0인 곳 -> 이동 불가 확인
+ * 2. 터널이 연결되어 있는지 여부 체크
+ * - 방향에 +2 %4 연산을 통하여 다음 좌표에서 현재 좌표 방향(반대)으로 연결되어있는지 여부 체크
+ */
+
 public class Solution {
 	static int N, M, answer, startR, startC, time;
 	static int[][] map;
@@ -72,7 +81,6 @@ public class Solution {
 				int c = temp[1];
 				int num = map[r][c]; // 터널 번호
 				answer++;
-//				System.out.println(r+ " " + c + " " + num);
 				
 				for (int d = 0; d < 4; d++) {
 					// 해당 방향으로 이동 불가 시 continue;
@@ -93,7 +101,6 @@ public class Solution {
 					visited[nr][nc] = true;
 				}
 			}
-//			System.out.println();
 		}
 	}
 }
