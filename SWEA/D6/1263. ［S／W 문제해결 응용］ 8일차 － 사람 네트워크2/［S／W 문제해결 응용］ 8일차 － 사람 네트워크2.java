@@ -3,6 +3,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+/*
+ * 문제 해결 프로세스
+ * 1. 양의 가중치, 싸이클 존재 -> 플로이드 워샬 사용
+ * 2. 이 때 최댓값은 1001로 저장
+ * 3. 연산 시 열과 행이 같은, 즉 나 자신으로 돌아오는 경로는 skip 하도록 해야 함
+ */
+
 public class Solution {
 	public static void main(String[] args) throws IOException{
 		StringBuilder sb = new StringBuilder();
@@ -25,6 +32,7 @@ public class Solution {
 				for (int i = 0; i < N; i++) {
 					for (int j = 0; j < N; j++) {
 						if (i == j) continue;
+						// 직접 연결된 경로 | k 노드를 거쳐서 연결된 경로
 						net[i][j] = Math.min(net[i][j], net[i][k] + net[k][j]);
 					}
 				}
