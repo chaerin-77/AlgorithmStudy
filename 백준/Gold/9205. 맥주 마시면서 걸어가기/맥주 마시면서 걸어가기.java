@@ -7,13 +7,19 @@ import java.util.Deque;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/*
+ * 문제 해결 프로세스
+ * 1. 편의점 하나를 기준으로 bfs
+ * 2. 입력 받은 후 모든 지점이 방문 가능한지 여부를 boolean 배열로 저장
+ * - 거리가 1000 이하이면 방문 가능
+ * 3. bfs를 돌며 페스티벌 장소에 도착했을 경우 true를 return 하여 happy 출력
+ */
+
 public class Main {
 	static Deque<Integer> q = new ArrayDeque<Integer>();
 	static List<int[]> location;
 	static boolean[][] connect;
 	static boolean[] visited;
-	static int[] house;
-	static int[] festival;
 	static int n;
 	
 	public static void main(String[] args) throws IOException {
@@ -23,28 +29,29 @@ public class Main {
 		for (int t = 1; t <= T; t++) {
 			n = Integer.parseInt(br.readLine());
 			q.clear();
-			connect = new boolean[n + 1][n + 1];
-			visited = new boolean[n + 1];
-			house = new int[2];
+			connect = new boolean[n + 2][n + 2];
+			visited = new boolean[n + 2];
 			location = new ArrayList<int[]>();
-			st = new StringTokenizer(br.readLine());
-			house[0] = Integer.parseInt(st.nextToken());
-			house[1] = Integer.parseInt(st.nextToken());
-			for (int i = 0; i <= n; i++) {
+			for (int i = 0; i <= n + 1; i++) {
 				st = new StringTokenizer(br.readLine());
 				int r = Integer.parseInt(st.nextToken());
 				int c = Integer.parseInt(st.nextToken());
 				location.add(new int[] {r, c});
 			}
 			
-			for (int i = 0; i < n; i++) {
+			visited[0] = true; // 시작 지점 방문 처리
+			for (int i = 0; i <= n; i++) {
 				int[] start = location.get(i);
-				for (int j = i + 1; j <= n; j++) {
+				for (int j = i + 1; j <= n + 1; j++) {
 					int[] end = location.get(j);
 					int dist = Math.abs(start[0] - end[0]) + Math.abs(start[1] - end[1]);
 					if (dist <= 1000) {
 						connect[i][j] = true;
 						connect[j][i] = true;
+					}
+					if (connect[i][j] && i == 0) {
+						visited[j] = true;
+						q.offer(j);
 					}
 				}
 			}
@@ -54,16 +61,10 @@ public class Main {
 		}
 	}
 	private static boolean bfs() {
-		for (int i = 0; i <= n; i++) {
-			int[] conv = location.get(i);
-			int dist = Math.abs(conv[0] - house[0]) + Math.abs(conv[1] - house[1]);
-			if (dist <= 1000) q.offer(i);
-		}
-		
 		while (!q.isEmpty()) {
 			int conv = q.poll();
-			if (conv == n) return true;
-			for (int i = 0; i <= n; i++) {
+			if (conv == n + 1) return true;
+			for (int i = 0; i <= n + 1; i++) {
 				if (connect[conv][i] && !visited[i]) {
 					visited[conv] = true;
 					q.offer(i);
