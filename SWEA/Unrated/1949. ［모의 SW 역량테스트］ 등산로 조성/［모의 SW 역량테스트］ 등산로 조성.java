@@ -2,9 +2,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
+
+/*
+ * 문제 해결 프로세스
+ * 1. 가장 높은 봉우리를 리스트 형태로 저장 -> 이후 모든 봉우리를 기준으로 시도
+ * 2. dfs 시 visited 배열을 3차원으로 하여 공사를 한 경우, 안 한 경우로 나누어 진행
+ * 3. 현재 높이보다 1만큼만 작게 하는 것이 최선의 선택이기 때문에
+ * - 현재 높이보다 작을 경우 그대로 dfs
+ * - 현재 높이와 같거나 높을 경우 현재 높이에서 -1만큼 깎을 수 있는지 확인 후 dfs
+ */
 
 public class Solution {
 	static int N, K, answer;
@@ -44,8 +52,6 @@ public class Solution {
 				visited = new boolean[N][N][2];
 				visited[peek[0]][peek[1]][0] = true;
 				dfs(peek[0], peek[1], 0, 1);
-//				System.out.println(Arrays.toString(peek));
-//				System.out.println(answer);
 			}
 			sb.append("#").append(t).append(" ").append(answer).append("\n");
 		}
@@ -69,6 +75,7 @@ public class Solution {
 			} else {
 				// 이미 공사를 한 경우 다음 탐색
 				if (flag == 1) continue;
+				
 				// 깊게 파도 안될 경우 다음 탐색
 				if (height - (map[r][c] - 1) > K) continue;
 				
@@ -79,6 +86,7 @@ public class Solution {
 				visited[nr][nc][1] = false;
 			}
 		}
+		// 4방향 탐색 종료 후 더 이상 탐색이 안될 경우 값 갱신
 		answer = Math.max(answer, length);
 	}
 }
