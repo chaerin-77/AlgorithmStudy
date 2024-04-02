@@ -6,6 +6,15 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.StringTokenizer;
 
+/*
+ * 문제 해결 프로세스
+ * 1. 중복 순열을 통해 구슬을 떨어트릴 위치 선정
+ * 2. 이후 하나씩 구슬을 떨어트림
+ * 3. 구슬을 떨어트린 후 재귀를 통해 벽돌을 부숨
+ * 4. 한 번 구슬을 떨어트리고 벽돌을 부순 후 위에 있는 블록 내리기
+ * - for문을 통해 전체 탐색
+ */
+
 public class Solution {
 	static int N, W, H, bbrick, brick, answer;
 	static int[][] map, copymap;
