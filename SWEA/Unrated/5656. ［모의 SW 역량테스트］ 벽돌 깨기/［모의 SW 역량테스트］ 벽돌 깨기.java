@@ -78,6 +78,7 @@ public class Solution {
 		int range = copymap[r][c] - 1;
 		copymap[r][c] = 0;
 		brick--;
+		if (brick == 0) return;
 
 		for (int d = 0; d < 4; d++) {
 			for (int ra = 1; ra <= range; ra++) {
