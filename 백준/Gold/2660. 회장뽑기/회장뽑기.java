@@ -3,6 +3,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+/*
+ * 문제 해결 프로세스
+ * 1. 각 회원 별로 bfs 탐색 진행
+ * 2. 이 때 레벨 별 bfs를 통해 depth 계산
+ * - depth == 점수
+ */
+
 public class Main {
     static int N, min = Integer.MAX_VALUE;
     static int[] point;
