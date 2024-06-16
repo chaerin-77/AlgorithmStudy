@@ -5,6 +5,14 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
+/*
+ * 문제 해결 프로세스
+ * 1. 입력 시에는 HashMap의 merge함수를 사용
+ * - 기존의 값이 있다면 식으로 계산, 없다면 해당 값 추가
+ * 2. 입력 후 출력에는 pq로 정렬하여 사용
+ * - 클래스를 생성하여 comparable 정의 후 정렬
+ */
+
 public class Main {
     static class Word implements Comparable<Word> {
         String word;
